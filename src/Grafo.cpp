@@ -385,3 +385,91 @@ void Grafo::dijkstra(int origen, int destino) {
     delete[] padre;
     delete[] visitado;
 }
+
+// ==================== ES CONEXO ====================
+bool Grafo::esConexo() {
+    if (numVertices == 0) return true;
+    
+    bool* visitado = new bool[numVertices];
+    for (int i = 0; i < numVertices; i++) {
+        visitado[i] = false;
+    }
+    
+    // Cola para BFS
+    NodoPila* frente = NULL;
+    NodoPila* final = NULL;
+    
+    // Encolar primer vértice
+    NodoPila* inicio = new NodoPila(0);
+    frente = final = inicio;
+    visitado[0] = true;
+    int contador = 1;
+    
+    while (frente != NULL) {
+        // Desencolar
+        int v = frente->dato;
+        NodoPila* temp = frente;
+        frente = frente->siguiente;
+        if (frente == NULL) final = NULL;
+        delete temp;
+        
+        // Recorrer vecinos
+        NodoArista* arista = vertices[v].listaAristas;
+        while (arista != NULL) {
+            int vecino = arista->destino;
+            if (!visitado[vecino]) {
+                visitado[vecino] = true;
+                contador++;
+                
+                // Encolar
+                NodoPila* nuevo = new NodoPila(vecino);
+                if (frente == NULL) {
+                    frente = final = nuevo;
+                } else {
+                    final->siguiente = nuevo;
+                    final = nuevo;
+                }
+            }
+            arista = arista->siguiente;
+        }
+    }
+    
+    delete[] visitado;
+    return contador == numVertices;
+}
+
+// ==================== NUMERO DE ARISTAS ====================
+int Grafo::numeroAristas() {
+    int total = 0;
+    
+    for (int i = 0; i < numVertices; i++) {
+        NodoArista* arista = vertices[i].listaAristas;
+        while (arista != NULL) {
+            total++;
+            arista = arista->siguiente;
+        }
+    }
+    
+    if (!esDirigido) {
+        total /= 2;
+    }
+    
+    return total;
+}
+
+void Grafo::mostrarMatriz() {
+    cout << "\n==MATRIZ DE ADYACENCIA==" << endl;
+    cout << "   ";
+    for (int i = 0; i < numVertices; i++) {
+        cout << " " << i << " ";
+    }
+    cout << endl;
+    
+    for (int i = 0; i < numVertices; i++) {
+        cout << i << " |";
+        for (int j = 0; j < numVertices; j++) {
+            cout << " " << matrizPesos[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
