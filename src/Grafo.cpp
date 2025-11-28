@@ -194,3 +194,99 @@ void Grafo::BFS(int inicio) {
         delete temp;
         
         cout << v << " ";
+        
+        // Recorrer vecinos
+        NodoArista* arista = vertices[v].listaAristas;
+        while (arista != NULL) {
+            int vecino = arista->destino;
+            if (!visitado[vecino]) {
+                visitado[vecino] = true;
+                
+                // Encolar vecino
+                NodoPila* nuevo = new NodoPila(vecino);
+                if (frente == NULL) {
+                    frente = final = nuevo;
+                } else {
+                    final->siguiente = nuevo;
+                    final = nuevo;
+                }
+            }
+            arista = arista->siguiente;
+        }
+    }
+    
+    cout << endl;
+    delete[] visitado;
+}
+
+// ==================== DFS ====================
+void Grafo::DFS(int inicio) {
+    if (inicio < 0 || inicio >= numVertices) {
+        cout << "Error: Vertice inicio invalido" << endl;
+        return;
+    }
+
+    // Array dinámico de visitados
+    bool* visitado = new bool[numVertices];
+    for (int i = 0; i < numVertices; i++) {
+        visitado[i] = false;
+    }
+    
+    // Pila implementada con lista enlazada
+    NodoPila* pila = NULL;
+    
+    cout << "\n==RECORRIDO DFS==" << endl;
+    cout << "Inicio: vertice " << inicio << endl;
+    cout << "Orden: ";
+    
+    // Apilar inicio
+    NodoPila* nuevoNodo = new NodoPila(inicio);
+    nuevoNodo->siguiente = pila;
+    pila = nuevoNodo;
+    
+    while (pila != NULL) {
+        // Desapilar
+        int v = pila->dato;
+        NodoPila* temp = pila;
+        pila = pila->siguiente;
+        delete temp;
+        
+        if (!visitado[v]) {
+            visitado[v] = true;
+            cout << v << " ";
+            
+            //Apilar vecinos (en orden inverso para mantener orden logico)
+            //Primero contamos cuántos vecinos hay
+            int numVecinos = 0;
+            NodoArista* contador = vertices[v].listaAristas;
+            while (contador != NULL) {
+                numVecinos++;
+                contador = contador->siguiente;
+            }
+            
+            //array temporal de vecinos
+            int* vecinos = new int[numVecinos];
+            NodoArista* arista = vertices[v].listaAristas;
+            int index = 0;
+            while (arista != NULL) {
+                vecinos[index++] = arista->destino;
+                arista = arista->siguiente;
+            }
+            
+            //Apilar en orden inverso
+            for (int i = numVecinos - 1; i >= 0; i--) {
+                if (!visitado[vecinos[i]]) {
+                    NodoPila* nuevo = new NodoPila(vecinos[i]);
+                    nuevo->siguiente = pila;
+                    pila = nuevo;
+                }
+            }
+            
+            delete[] vecinos;
+        }
+    }
+    
+    cout << endl;
+    delete[] visitado;
+}
+
