@@ -3,7 +3,7 @@
 Santiago Carrasquero 31.653.014
 Eric Vargas 31.907.574
 
-ibrería de Grafos en la materia Estructura Dinamica de Datos
+Librería de Grafos en la materia Estructura Dinamica de Datos
 
 Este proyecto es una librería de grafos implementada en C++ que permite trabajar con grafos de manera fácil y rápida. 
 La librería incluye las funciones más importantes para trabajar con grafos como recorridos BFS Y DFS, encontrar el camino más corto usando Dijkstra, y verificar si el grafo es conexo.
